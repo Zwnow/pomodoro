@@ -1,0 +1,98 @@
+<html lang="eng">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <div id="content">
+            <div>
+                <h1 id="time"></h1>
+            </div>
+            <div id="controls">
+                <button id="start_btn">Start</button>
+                <button id="stop_btn">Stop</button>
+            </div>
+        </div>
+    </body>
+    <script defer>
+        let time, minutes, seconds;
+        let running = false;
+        
+        let date = new Date('June 04, 1995 00:25:00');
+        
+        const startBtn = document.getElementById("start_btn");
+        const stopBtn = document.getElementById("stop_btn");
+        var interval;
+
+        startBtn.addEventListener("click", () => Start());
+        stopBtn.addEventListener("click", () => Stop());
+
+        init();
+         
+        function init() {
+            time = "25:00";
+            minutes = time.split(":")[0];
+            seconds = time.split(":")[1];
+            document.getElementById("time").innerText = "25:00";
+        }
+        
+        function Start() {
+            if (!running) {
+                running = true;
+                interval = setInterval(() => UpdateTime(), 200);
+                PlayAnimation("WhiteToRed");
+            }
+        }
+
+        function Stop() {
+           PlayAnimation("RedToWhite");
+           if (running) {
+                running = false;
+                clearInterval(interval);
+                init();
+           } 
+        }
+
+        function UpdateTime() {
+            
+            const t = document.getElementById("time");
+            t.innerText = `${GetTimeString(Number(minutes))}:${GetTimeString(Number(seconds))}`;
+            document.title = `${GetTimeString(Number(minutes))}:${GetTimeString(Number(seconds))}`;
+            if (document.title == "00:00") {
+                window.focus();
+                window.alert("You did it! Time for a break :-)");
+                PlayAnimation("RedToWhite");
+                init();
+            }
+        }
+
+        function GetTimeString(number) {
+            if (number == 0) { return "00" }
+            if (number >= 10) { return number }
+            if (number < 10) { return "0"+number }
+        }
+
+        async function PlayAnimation(animationName) {
+            const body = document.getElementById("content");
+            const buttons = document.querySelectorAll("button");
+            console.log(buttons)
+            switch (animationName) {
+            case "WhiteToRed":
+                body.style.animation = "WhiteToRed 2.5s forwards";
+                buttons.forEach((button) => {
+                    button.style.animation = "RedToWhite 1.5s forwards";
+                })
+            break;
+
+            case "RedToWhite":
+                body.style.animation = "RedToWhite 2.5s forwards";
+                buttons.forEach((button) => {
+                    button.style.animation = "WhiteToRed 1.5s forwards";
+                })
+            break;
+            }
+        }
+        
+    </script>
+</html>
