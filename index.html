@@ -3,6 +3,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="./style.css">
+        <title>Pomodoro</title>
     </head>
     <body>
         <div id="content">
@@ -11,31 +12,27 @@
             </div>
             <div id="controls">
                 <button id="start_btn">Start</button>
-                <button id="stop_btn">Stop</button>
             </div>
         </div>
+        <div id="circle"></div>
     </body>
     <script defer>
         let time, start, minutes, seconds;
         let oldDelta = 0;
         let running = false;
         
-        let date = new Date('June 04, 1995 00:25:00');
-        
         const startBtn = document.getElementById("start_btn");
-        const stopBtn = document.getElementById("stop_btn");
         var interval;
 
         startBtn.addEventListener("click", () => Start());
-        stopBtn.addEventListener("click", () => Stop());
 
         init();
          
         function init() {
-            time = "25:00";
+            time = "00:03";
             minutes = time.split(":")[0];
             seconds = time.split(":")[1];
-            document.getElementById("time").innerText = "25:00";
+            document.getElementById("time").innerText = "00:03";
         }
         
         function Start() {
@@ -43,16 +40,20 @@
                 running = true;
                 start = Date.now();
                 interval = setInterval(() => UpdateTime(), 500);
-                PlayAnimation("WhiteToRed");
+                PlayAnimation("Shrink");
+                PlayAnimation("Hide");
             }
         }
 
         function Stop() {
-           PlayAnimation("RedToWhite");
            if (running) {
                 running = false;
+                start = null;
+                oldDelta = 0;
                 clearInterval(interval);
                 init();
+                PlayAnimation("Grow");
+                PlayAnimation("Show");
            } 
         }
 
@@ -71,13 +72,14 @@
             }
 
             t.innerText = `${GetTimeString(Number(minutes))}:${GetTimeString(Number(seconds))}`;
+            PlayAnimation("Circle");
             document.title = `${GetTimeString(Number(minutes))}:${GetTimeString(Number(seconds))}`;
 
-            if (document.title == "00:00") {
-                window.focus();
-                window.alert("You did it! Time for a break :-)");
-                PlayAnimation("RedToWhite");
-                init();
+            if (document.title == "00:00") { 
+                setTimeout(() => {
+                    Stop();
+                    //window.alert("You did it! Time for a break :-)");
+                }, 500);
             }
         }
 
@@ -88,22 +90,28 @@
         }
 
         async function PlayAnimation(animationName) {
-            const body = document.getElementById("content");
-            const buttons = document.querySelectorAll("button");
-            switch (animationName) {
-            case "WhiteToRed":
-                body.style.animation = "WhiteToRed 2.5s forwards";
-                buttons.forEach((button) => {
-                    button.style.animation = "RedToWhite 1.5s forwards";
-                })
-            break;
 
-            case "RedToWhite":
-                body.style.animation = "RedToWhite 2.5s forwards";
-                buttons.forEach((button) => {
-                    button.style.animation = "WhiteToRed 1.5s forwards";
-                })
-            break;
+            const content = document.getElementById("content");
+            const buttons = document.querySelectorAll("button");
+            const circle = document.getElementById("circle");
+
+            switch (animationName) {
+            case "Shrink":
+                circle.style.animation = "Shrink 0.5s forwards";
+                break;
+            case "Circle":
+                circle.style.animation = "";
+                circle.style.animation = "Circle 1s infinite";
+                break;
+            case "Grow":
+                circle.style.animation = "Grow 0.5s forwards";
+                break;
+            case "Hide":
+                buttons.forEach((button) => button.style.display = "none");
+                break;
+            case "Show":
+                buttons.forEach((button) => button.style.display = "block");
+                break;
             }
         }
         

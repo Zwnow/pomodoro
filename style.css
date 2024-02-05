@@ -16,13 +16,13 @@ body {
 button {
     font-size: 24pt;
     width: 150px;
-    height: 75px;
+    height: 55px;
     border: none;
     border-bottom: 2px solid black;
     border-right: 2px solid black;
     border-radius: 0.25rem;
     cursor: pointer;
-    background-color: rgb(233, 79, 55);
+    background-color: white;
 }
 
 h1 {
@@ -38,18 +38,58 @@ h1 {
     height: 400px;
     border-radius: 200px;
     gap: 10px;
+    z-index: 999;
 }
 
-@keyframes WhiteToRed {
-    from {background-color: white;}
+#circle {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 200px;
+    background-color: rgb(233, 79, 55);
+}
+
+@keyframes Shrink {
+    from {
+       width: 400px;
+       height: 400px;
+       border-radius: 200px;
+       transform: translateY(0);
+    } 
     to {
-        background-color: rgb(233, 79, 55);
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        transform: translateY(-175px);
     }
 }
 
-@keyframes RedToWhite {
-    from {background-color: rgb(233, 79, 55);}
-    to {
-        background-color: white;
+@keyframes Circle {
+    from {
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        transform: rotate(0deg) translateY(-175px) rotate(0deg);
     }
+    to {
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        transform: rotate(-365deg) translateY(-175px) rotate(-365deg);
+    }
+}
+
+@keyframes Grow {
+    from {
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        transform: translateY(-175px);
+    }
+    to{
+       width: 400px;
+       height: 400px;
+       border-radius: 200px;
+       transform: translateY(0);
+    } 
 }
